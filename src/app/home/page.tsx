@@ -18,6 +18,7 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { getServers } from '../../services/apiServer';
+import FloatingButton from '@/components/common/FloatingButton/page';
 
 const Home: React.FC = () => {
   const [servers, setServers] = useState<any[]>([]);
@@ -58,6 +59,7 @@ const Home: React.FC = () => {
   };
 
   return (
+    <Box>
     <Box p={2}>
       <Typography variant="h5" gutterBottom>
         Server List
@@ -131,6 +133,8 @@ const Home: React.FC = () => {
       ) : (
         <Typography>No servers available</Typography>
       )}
+    </Box>
+    <FloatingButton/>
     </Box>
   );
 };
