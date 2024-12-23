@@ -60,81 +60,10 @@ const Home: React.FC = () => {
 
   return (
     <Box>
-    <Box p={2}>
       <Typography variant="h5" gutterBottom>
         Server List
       </Typography>
-      {error && <Typography color="error">Error: {error}</Typography>}
-      <TextField
-        label="Quick Search"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
-      {loading ? (
-        <Box display="flex" justifyContent="center" mt={2}>
-          <CircularProgress />
-        </Box>
-      ) : servers.length > 0 ? (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Power</TableCell>
-                <TableCell>Servername</TableCell>
-                <TableCell>Hostname</TableCell>
-                <TableCell>Primary IP</TableCell>
-                <TableCell>Owner</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>OS</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Short Description</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {servers
-                .slice((page - 1) * pageSize, page * pageSize)
-                .map((server) => (
-                  <TableRow key={server.id}>
-                    <TableCell>{server.cachedPowerstatus || 'N/A'}</TableCell>
-                    <TableCell>{server.servername}</TableCell>
-                    <TableCell>{server.hostname}</TableCell>
-                    <TableCell>{server.primaryip || 'N/A'}</TableCell>
-                    <TableCell>{server.owner_realname}</TableCell>
-                    <TableCell>
-                      {server.tags.length > 0 ? server.tags.join(', ') : 'N/A'}
-                    </TableCell>
-                    <TableCell>{server.os || 'N/A'}</TableCell>
-                    <TableCell>{server.servertype}</TableCell>
-                    <TableCell>{server.description || 'N/A'}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-          <Box display="flex" justifyContent="space-between" alignItems="center" p={2}>
-            <Select
-              value={pageSize}
-              // onChange={handlePageSizeChange}
-              displayEmpty
-            >
-              {[10, 25, 50, 100].map((size) => (
-                <MenuItem key={size} value={size}>
-                  {size}
-                </MenuItem>
-              ))}
-            </Select>
-            <Pagination
-              count={Math.ceil(servers.length / pageSize)}
-              page={page}
-              onChange={handlePageChange}
-            />
-          </Box>
-        </TableContainer>
-      ) : (
-        <Typography>No servers available</Typography>
-      )}
-    </Box>
-    <FloatingButton/>
+      
     </Box>
   );
 };
