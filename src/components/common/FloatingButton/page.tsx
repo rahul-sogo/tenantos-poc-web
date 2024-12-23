@@ -1,8 +1,8 @@
 'use client';
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Button } from '@mui/material';
-import AddServerPopup from '@/app/home/AddServerPopup/page';
 
 const FloatingButton: React.FC = () => {
   const [showOptions, setShowOptions] = useState(false);
@@ -12,8 +12,8 @@ const FloatingButton: React.FC = () => {
     setShowOptions(!showOptions);
   };
 
-  const handleOptionClick = (route: string) => {
-    router.push(route);
+  const handleOptionClick = () => {
+    router.push('/home/AddServerPopup');
   };
 
   return (
@@ -33,16 +33,9 @@ const FloatingButton: React.FC = () => {
             variant="contained"
             color="success"
             sx={{ mb: 1 }}
-            onClick={() => handleOptionClick('/add-dedicated')}
+            onClick={handleOptionClick}
           >
             + Dedicated
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleOptionClick('/add-vps')}
-          >
-            + VPS
           </Button>
         </Box>
       )}
