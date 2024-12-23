@@ -1,43 +1,137 @@
-import { Metadata, NextPage } from 'next';
-import { Stack, Typography } from '@mui/material';
-import { AppLink } from '@/components';
-import DemoAppAlert from '../dev/components/DemoAppAlerts';
-import DemoAppButton from '../dev/components/DemoAppButton';
-import DemoAppIcon from '../dev/components/DemoAppIcon';
-import DemoAppIconButton from '../dev/components/DemoAppIconButton';
-import DemoAppImage from '../dev/components/DemoAppImage';
+'use client';
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Paper,
+  TextField,
+  Select,
+  MenuItem,
+  Pagination,
+  CircularProgress,
+  SelectChangeEvent,
+} from '@mui/material';
+import { getServers } from '../../services/apiServer';
 
-export const metadata: Metadata = {
-  title: '_TITLE_',
-  description: '_DESCRIPTION_',
-};
+const Home: React.FC = () => {
+  const [servers, setServers] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [pageSize, setPageSize] = useState<number>(50);
+  const [page, setPage] = useState<number>(1);
 
-/**
- * Main page of the Application
- * @page Home
- */
-const Home: NextPage = () => {
+  useEffect(() => {
+    const fetchServers = async () => {
+      setLoading(true);
+      try {
+        const response = await getServers();
+        console.log('API Response:', response);
+
+        if (response?.result && Array.isArray(response.result)) {
+          setServers(response.result);
+        } else {
+          setServers([]);
+          setError('Unexpected response format from the server');
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServers();
+  }, []);
+
+  const handlePageSizeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setPageSize(event.target.value as number);
+  };
+
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
   return (
-    <Stack spacing={2} padding={2}>
-      <Stack>
-        <Typography variant="h3">About application</Typography>
-        <Typography variant="body1">
-          This application is a mix of{' '}
-          <AppLink href="https://nextjs.org/docs/api-reference/create-next-app">Create Next App</AppLink> and{' '}
-          <AppLink href="https://mui.com/">MUI</AppLink> with set of reusable components and utilities to build
-          professional <AppLink href="https://nextjs.org/">NextJS</AppLink> application faster. The source code is
-          available on <AppLink href="https://github.com/karpolan/nextjs-mui-starter-ts">GitHub</AppLink>.
-        </Typography>
-      </Stack>
-
-      <Stack alignItems="center" spacing={1}>
-        <DemoAppAlert />
-        <DemoAppButton />
-        <DemoAppIcon />
-        <DemoAppIconButton />
-        <DemoAppImage />
-      </Stack>
-    </Stack>
+    <Box p={2}>
+      <Typography variant="h5" gutterBottom>
+        Server List
+      </Typography>
+      {error && <Typography color="error">Error: {error}</Typography>}
+      <TextField
+        label="Quick Search"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+      />
+      {loading ? (
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CircularProgress />
+        </Box>
+      ) : servers.length > 0 ? (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Power</TableCell>
+                <TableCell>Servername</TableCell>
+                <TableCell>Hostname</TableCell>
+                <TableCell>Primary IP</TableCell>
+                <TableCell>Owner</TableCell>
+                <TableCell>Tags</TableCell>
+                <TableCell>OS</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Short Description</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {servers
+                .slice((page - 1) * pageSize, page * pageSize)
+                .map((server) => (
+                  <TableRow key={server.id}>
+                    <TableCell>{server.cachedPowerstatus || 'N/A'}</TableCell>
+                    <TableCell>{server.servername}</TableCell>
+                    <TableCell>{server.hostname}</TableCell>
+                    <TableCell>{server.primaryip || 'N/A'}</TableCell>
+                    <TableCell>{server.owner_realname}</TableCell>
+                    <TableCell>
+                      {server.tags.length > 0 ? server.tags.join(', ') : 'N/A'}
+                    </TableCell>
+                    <TableCell>{server.os || 'N/A'}</TableCell>
+                    <TableCell>{server.servertype}</TableCell>
+                    <TableCell>{server.description || 'N/A'}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+          <Box display="flex" justifyContent="space-between" alignItems="center" p={2}>
+            <Select
+              value={pageSize}
+              // onChange={handlePageSizeChange}
+              displayEmpty
+            >
+              {[10, 25, 50, 100].map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
+              ))}
+            </Select>
+            <Pagination
+              count={Math.ceil(servers.length / pageSize)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Box>
+        </TableContainer>
+      ) : (
+        <Typography>No servers available</Typography>
+      )}
+    </Box>
   );
 };
 

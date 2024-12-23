@@ -3,14 +3,14 @@ import { IS_DEBUG } from '@/config';
 import { LinkToPage } from '@/utils';
 import TopBarAndSideBarLayout from './TopBarAndSideBarLayout';
 
-const TITLE_PRIVATE = '_TITLE_'; // Title for pages after authentication
+const TITLE_PRIVATE = 'SERVERS'; // Title for pages after authentication
 
 /**
  * SideBar navigation items with links for Private Layout
  */
 const SIDE_BAR_ITEMS: Array<LinkToPage> = [
   {
-    title: 'Home',
+    title: 'Servers',
     path: '/',
     icon: 'home',
   },

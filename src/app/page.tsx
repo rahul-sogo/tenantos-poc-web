@@ -1,3 +1,7 @@
-import HomePage from './home/page';
+import Home from './home/page';
+
+const HomePage = () => {
+    return  <Home/>;
+  };
 
 export default HomePage;
