@@ -1,7 +1,8 @@
 import Home from './home/page';
+import Server from './servers/ServerList';
 
 const HomePage = () => {
-    return  <Home/>;
+    return  <Server/>;
   };
 
 export default HomePage;
