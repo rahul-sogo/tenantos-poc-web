@@ -38,11 +38,13 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "axios": "^1.7.9",
     "clsx": "latest",
     "copy-to-clipboard": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-toastify": "^11.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "latest",
