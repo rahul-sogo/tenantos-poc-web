@@ -17,6 +17,7 @@ export const getAllUsers = async (): Promise<any> => {
     const response: AxiosResponse = await apiUser.get('/api/users');
     return response.data;
   } catch (error: any) {
+    console.error('Error details:', error.response || error.message);
     throw new Error(error.response?.data?.message || 'Error fetching servers');
   }
 };
