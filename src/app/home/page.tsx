@@ -32,23 +32,17 @@ const Home: React.FC = () => {
       setLoading(true);
       try {
         const response = await getServers();
-        console.log('API Response:', response);
-
-        if (response?.result && Array.isArray(response.result)) {
-          setServers(response.result);
-        } else {
-          setServers([]);
-          setError('Unexpected response format from the server');
-        }
+        setServers(response.result);
       } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchServers();
   }, []);
+  
 
   const handlePageSizeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setPageSize(event.target.value as number);

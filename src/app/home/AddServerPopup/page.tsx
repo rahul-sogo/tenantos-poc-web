@@ -16,7 +16,7 @@ import {
   Divider,
   FormControlLabel,
 } from "@mui/material";
-import { getCurrentUsers } from "@/services/apiUsers";
+import { getAllUsers } from "@/services/apiUsers";
 import { getRemoteAgents } from "@/services/apiRemoteAgents";
 import { createServer, getTags } from "@/services/apiServer";
 
@@ -143,40 +143,14 @@ const AddServerPopup: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [userResponse, agentsResponse] = await Promise.all([
-          getCurrentUsers(),
-          getRemoteAgents(),
-        ]);
-
-        if (userResponse) {
-          setUsers([userResponse]);
-        }
-
-        if (agentsResponse?.result && Array.isArray(agentsResponse.result)) {
-          setRemoteAgents(agentsResponse.result);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
         const [userResponse, agentsResponse, tagsResponse] = await Promise.all([
-          getCurrentUsers(),
+          getAllUsers(),
           getRemoteAgents(),
           getTags(),
         ]);
 
-        if (userResponse) {
-          setUsers([userResponse]);
+        if (userResponse?.result) {
+          setUsers(userResponse.result);
         }
 
         if (agentsResponse?.result && Array.isArray(agentsResponse.result)) {
@@ -263,11 +237,12 @@ const AddServerPopup: React.FC = () => {
                   <MenuItem value="">Select User</MenuItem>
                   {users.map((user) => (
                     <MenuItem key={user.id} value={user.id}>
-                      {user.name}
+                      {user.name} ({user.username})
                     </MenuItem>
                   ))}
                 </Select>
               </Box>
+
               <Box>
                 <Typography variant="subtitle1">Tags (Optional):</Typography>
                 <Select fullWidth defaultValue="">
